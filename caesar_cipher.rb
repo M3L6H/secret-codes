@@ -10,15 +10,19 @@ class Cipher
     @offset = 2
 
     self.parse_args(ARGV)
-    self.decode
+    self.encode
   end
 
 private
   attr_accessor :message, :mode, :negate, :offset
 
-  def decode
+  # Functionally only the encode method is needed, since decoding is just
+  # encoding in reverse
+  def encode
     self.offset *= -1 if self.negate
     offset = self.offset
+
+    # We invert the offset used if we are trying to decode the message
     offset *= -1 if self.mode == :decode
 
     msg = self.message.chars.map do |ch|
@@ -44,6 +48,7 @@ private
     HEREDOC
   end
 
+  # Command line interpretation
   def parse_args(args)
     self.print_help if args.empty?
 
@@ -97,6 +102,7 @@ private
     end
   end
 
+  # Print the help message
   def print_help
     print <<~HEREDOC
       Usage: ruby caesar_cipher.rb [options] [message string]
@@ -117,6 +123,7 @@ private
     HEREDOC
   end
 
+  # Prints the passed message and exits the program
   def print(msg)
     puts msg
     exit(0)
