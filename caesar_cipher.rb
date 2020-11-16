@@ -82,7 +82,7 @@ private
       case arg
       when /^[^-].*$/
         return if parsed_file
-        self.message = parsing_message
+        self.message = arg
         parsing_message = true
       when "--decode", "-d"
         self.mode = :decode
