@@ -20,22 +20,22 @@ private
   # encoding in reverse
   def encode
     self.offset *= -1 if self.negate
-    offset = self.offset
+    actual_offset = self.offset
 
     # We invert the offset used if we are trying to decode the message
-    offset *= -1 if self.mode == :decode
+    actual_offset *= -1 if self.mode == :decode
 
     msg = self.message.chars.map do |ch|
       case ch
       when "A".."Z"
         idx = ALPHABET_UPPER.index(ch)
-        ALPHABET_UPPER[(idx + offset) % 26]
+        ALPHABET_UPPER[(idx + actual_offset) % 26]
       when "a".."z"
         idx = ALPHABET_LOWER.index(ch)
-        ALPHABET_LOWER[(idx + offset) % 26]
+        ALPHABET_LOWER[(idx + actual_offset) % 26]
       when "0".."9"
         idx = NUMBERS.index(ch)
-        NUMBERS[(idx + offset) % 10]
+        NUMBERS[(idx + actual_offset) % 10]
       else
         ch
       end
