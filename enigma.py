@@ -1,3 +1,5 @@
+from configparser import ConfigParser
+
 class Enigma:
   rotors = {
     "a": {
@@ -41,3 +43,17 @@ class Enigma:
       "wiring": ["h", "x", "z", "j", "c", "i", "s", "l", "o", "y", "n", "t", "w", "k", "r", "q", "u", "m", "e", "a", "g", "p", "v", "d", "b", "f"]
     }
   }
+
+  def __init__(self, config="enigma.ini"):
+    self.config = config
+    self.load()
+
+  def load(self):
+    config = ConfigParser()
+    config.read(self.config)
+
+    if len(config.sections()) == 0:
+      raise FileNotFoundError(f"Could not find { self.config }")
+    
+
+enigma = Enigma()
