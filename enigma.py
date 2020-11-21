@@ -54,6 +54,18 @@ class Enigma:
 
     if len(config.sections()) == 0:
       raise FileNotFoundError(f"Could not find { self.config }")
-    
+
+    self.rotors = [config["rotors"][key] for key in list(config["rotors"])]
+    self.rotor_positions = [config["rotor positions"][key] for key in list(config["rotor positions"])]
+    self.plugboard = {}
+
+    for c in [config["plugboard"][k] for k in list(config["plugboard"])]:
+      self.plugboard[c[0]] = c[1]
+      self.plugboard[c[1]] = c[0]
+
+    self.typex = config["typex"]["enable_typex"].lower() == "true"
+
+    print(self.typex)
+
 
 enigma = Enigma()
