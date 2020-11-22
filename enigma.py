@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import re
 
 class Enigma:
   rotors = {
@@ -44,6 +45,11 @@ class Enigma:
     }
   }
 
+  # Converts a character in the range a-z to the range 0-25
+  @staticmethod
+  def char_code(char):
+    return ord(char) - 97
+
   def __init__(self, config="enigma.ini"):
     self.config = config
     self.load()
@@ -65,7 +71,28 @@ class Enigma:
 
     self.typex = config["typex"]["enable_typex"].lower() == "true"
 
-    print(self.typex)
+  def transform(self, char):
+    if not re.match(r"^[a-zA-Z]$", char):
+      return char
 
+    char = char.lower()
+
+    for i in range(3):
+      self.pass_through_rotor(char, i)
+  
+    if self.typex:
+      for i in range(2):
+        self.pass_through_rotor(char, 3 + i)
+      for i in range(2):
+        self.pass_through_rotor(char, 4 - i)
+
+    for i in range(3):
+      self.pass_through_rotor(char, 2 - i)
+
+    return self.plugboard[char] if self.plugboard.has_key(char) else char
+
+  def pass_through_rotor(self, char, index):
+    rotor = Enigma.rotors[self.rotors[index]]
+    char = rotor["wiring"][Enigma.char_code(char)]
 
 enigma = Enigma()
