@@ -71,6 +71,9 @@ class Enigma:
 
     self.typex = config["typex"]["enable_typex"].lower() == "true"
 
+  def encode(self, msg):
+    return "".join(list(map(self.transform, msg)))
+
   def transform(self, char):
     if not re.match(r"^[a-zA-Z]$", char):
       return char
@@ -89,7 +92,7 @@ class Enigma:
     for i in range(3):
       self.pass_through_rotor(char, 2 - i)
 
-    return self.plugboard[char] if self.plugboard.has_key(char) else char
+    return self.plugboard[char] if char in self.plugboard else char
 
   def pass_through_rotor(self, char, index):
     rotor = Enigma.rotors[self.rotors[index]]
