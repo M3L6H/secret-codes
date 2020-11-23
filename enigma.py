@@ -145,21 +145,30 @@ class Enigma:
     for i in range(3):
       char = self.pass_through_rotor(char, 2 - i, True)
 
-    # Rotate the mechanism
-    # self.rotate()
-
     char = self.plugboard[char] if char in self.plugboard else char
+
+    # Rotate the mechanism
+    self.rotate()
     
     return char
 
   def rotate(self):
-    if Enigma.rotors[self.rotors[0]]["notches"][self.rotor_positions[0]]:
-      if Enigma.rotors[self.rotors[1]]["notches"][self.rotor_positions[1]]:
-        self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(Enigma.alphabet)
+    if self.typex:
+      if Enigma.rotors[self.rotors[0]]["notches"][self.rotor_positions[0]]:
+        if Enigma.rotors[self.rotors[1]]["notches"][self.rotor_positions[1]]:
+          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(Enigma.alphabet)
+        
+        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(Enigma.alphabet)
       
-      self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(Enigma.alphabet)
-    
-    self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
+      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
+    else:
+      if self.rotor_positions[0] + 1 == len(Enigma.alphabet):
+        if self.rotor_positions[1] + 1 == len(Enigma.alphabet):
+          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(Enigma.alphabet)
+        
+        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(Enigma.alphabet)
+      
+      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
 
   def pass_through_rotor(self, char, index, rev=False):
     rotor = Enigma.rotors[self.rotors[index]]
