@@ -1,5 +1,4 @@
 from configparser import ConfigParser
-import re
 from random import randrange
 
 class Enigma:
@@ -47,6 +46,7 @@ class Enigma:
   }
 
   alphabet = [chr(c) for c in range(32, 127)]
+  reflector = ['^', '{', 'Q', ',', 'q', '@', '/', 'y', '-', '_', 'e', 'V', '#', '(', 'x', '&', '7', 'D', 'S', 'O', 'I', 'o', 'c', '0', '`', 'U', 'X', 'J', 'G', 'h', 'T', 'B', '%', 'E', '?', 'K', '1', 'A', '[', '<', 't', '4', ';', 'C', 'W', 'f', '\\', '3', 'm', '"', 'p', '2', '>', '9', '+', 'L', ':', 'w', 'i', 'F', 'N', 'd', ' ', ')', '8', '}', 'n', '6', ']', '*', 'M', 'v', '=', 'Z', '|', 'l', 'k', 'P', 'b', '5', 'R', '$', 's', 'r', 'H', '~', 'g', 'Y', '.', "'", 'z', '!', 'j', 'a', 'u']
 
   # Converts a character to its position in the alphabet
   @staticmethod
@@ -83,6 +83,11 @@ class Enigma:
       wiring[i] = Enigma.alphabet[j]
       wiring[j] = Enigma.alphabet[i]
 
+    # for i in range(len(Enigma.alphabet)):
+    #   j = Enigma.get_rand_in_alphabet(chosen)
+    #   chosen.append(j)
+    #   wiring[i] = Enigma.alphabet[j]
+
     return wiring
       
 
@@ -114,6 +119,8 @@ class Enigma:
     if char not in Enigma.alphabet:
       return char
 
+    char = self.plugboard[char] if char in self.plugboard else char
+
     for i in range(3):
       char = self.pass_through_rotor(char, i)
   
@@ -121,17 +128,19 @@ class Enigma:
       for i in range(2):
         char = self.pass_through_rotor(char, 3 + i)
 
-    char = self.plugboard[char] if char in self.plugboard else char
+    char = Enigma.reflector[Enigma.char_code(char)]
 
     if self.typex:
       for i in range(2):
-        char = self.pass_through_rotor(char, 4 - i)
+        char = self.pass_through_rotor(char, 4 - i, True)
 
     for i in range(3):
-      char = self.pass_through_rotor(char, 2 - i)
+      char = self.pass_through_rotor(char, 2 - i, True)
 
     # Rotate the mechanism
-    self.rotate()
+    # self.rotate()
+
+    char = self.plugboard[char] if char in self.plugboard else char
     
     return char
 
@@ -144,10 +153,12 @@ class Enigma:
     
     self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
 
-  def pass_through_rotor(self, char, index):
+  def pass_through_rotor(self, char, index, rev=False):
     rotor = Enigma.rotors[self.rotors[index]]
     i = (Enigma.char_code(char) + self.rotor_positions[index]) % len(Enigma.alphabet)
-    return rotor["wiring"][i]
+    return Enigma.alphabet[rotor["wiring"].index(char)] if rev else rotor["wiring"][i]
 
 enigma = Enigma()
-print(enigma.encode("H+Q15|'0$jx"))
+print(enigma.encode("E"))
+
+# print(Enigma.create_rotor())
