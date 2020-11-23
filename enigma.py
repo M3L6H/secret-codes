@@ -173,6 +173,11 @@ class Enigma:
   def pass_through_rotor(self, char, index, rev=False):
     rotor = Enigma.rotors[self.rotors[index]]
     i = (Enigma.char_code(char) + self.rotor_positions[index]) % len(Enigma.alphabet)
-    return Enigma.alphabet[rotor["wiring"].index(char)] if rev else rotor["wiring"][i]
+
+    if rev:
+      return Enigma.alphabet[rotor["wiring"].index(char) - self.rotor_positions[index]]
+    else:
+      return rotor["wiring"][i]
 
 enigma = Enigma()
+print(enigma.encode("G[.u{b_"))
