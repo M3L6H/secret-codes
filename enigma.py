@@ -178,6 +178,3 @@ class Enigma:
       return Enigma.alphabet[rotor["wiring"].index(char) - self.rotor_positions[index]]
     else:
       return rotor["wiring"][i]
-
-enigma = Enigma()
-print(enigma.encode("G[.u{b_"))
