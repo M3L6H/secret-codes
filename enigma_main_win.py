@@ -234,6 +234,9 @@ class Ui_Enigma(object):
     self.horizontalLayout.setObjectName("horizontalLayout")
     spacerItem7 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
     self.horizontalLayout.addItem(spacerItem7)
+    self.encode_pushButton = QtWidgets.QPushButton(self.output_groupBox)
+    self.encode_pushButton.setObjectName("encode_pushButton")
+    self.horizontalLayout.addWidget(self.encode_pushButton)
     self.copy_pushButton = QtWidgets.QPushButton(self.output_groupBox)
     self.copy_pushButton.setObjectName("copy_pushButton")
     self.horizontalLayout.addWidget(self.copy_pushButton)
@@ -265,6 +268,10 @@ class Ui_Enigma(object):
     self.actionEnigma_Help.setObjectName("actionEnigma_Help")
     self.actionAbout_Enigma = QtWidgets.QAction(Enigma)
     self.actionAbout_Enigma.setObjectName("actionAbout_Enigma")
+    self.actionEncode_Input = QtWidgets.QAction(Enigma)
+    self.actionEncode_Input.setObjectName("actionEncode_Input")
+    self.menuFile.addAction(self.actionEncode_Input)
+    self.menuFile.addSeparator()
     self.menuFile.addAction(self.actionOpen_Config)
     self.menuFile.addSeparator()
     self.menuFile.addAction(self.actionExit)
@@ -304,6 +311,7 @@ class Ui_Enigma(object):
     self.wire10_label.setText(_translate("Enigma", "Wire 10"))
     self.input_groupBox.setTitle(_translate("Enigma", "Input"))
     self.output_groupBox.setTitle(_translate("Enigma", "Output"))
+    self.encode_pushButton.setText(_translate("Enigma", "Encode"))
     self.copy_pushButton.setText(_translate("Enigma", "Copy"))
     self.menuFile.setTitle(_translate("Enigma", "File"))
     self.menuHelp.setTitle(_translate("Enigma", "Help"))
@@ -319,6 +327,8 @@ class Ui_Enigma(object):
     self.actionEnigma_Help.setText(_translate("Enigma", "Enigma Help"))
     self.actionEnigma_Help.setShortcut(_translate("Enigma", "Ctrl+Shift+/"))
     self.actionAbout_Enigma.setText(_translate("Enigma", "About Enigma"))
+    self.actionEncode_Input.setText(_translate("Enigma", "Encode Input"))
+    self.actionEncode_Input.setShortcut(_translate("Enigma", "Ctrl+E"))
 
 
 if __name__ == "__main__":
