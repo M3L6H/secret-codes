@@ -1,4 +1,10 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
+
+from enigma import Enigma
+
+QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
+QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
+QtCore.QCoreApplication.setApplicationName("Enigma")
 
 
 class Ui_Enigma(object):
