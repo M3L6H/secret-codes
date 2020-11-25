@@ -98,11 +98,12 @@ class Enigma:
 
     return wiring
       
-
+  # Constructor for the machine
   def __init__(self, config="enigma.ini"):
     self.config = config
     self.load()
 
+  # Load from the configuration file
   def load(self):
     config = ConfigParser()
     config.read(self.config)
@@ -120,9 +121,11 @@ class Enigma:
 
     self.typex = config["typex"]["enable_typex"].lower() == "true"
 
+  # Encode the passed message
   def encode(self, msg):
     return "".join(list(map(self.transform, msg)))
 
+  # Transforms the given character by running it through the rotors + plugboard
   def transform(self, char):
     if char not in Enigma.alphabet:
       return char
@@ -152,6 +155,7 @@ class Enigma:
     
     return char
 
+  # Rotates the rotors
   def rotate(self):
     if self.typex:
       if Enigma.rotors[self.rotors[0]]["notches"][self.rotor_positions[0]]:
@@ -170,6 +174,7 @@ class Enigma:
       
       self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
 
+  # Passes the given character through the rotor at index
   def pass_through_rotor(self, char, index, rev=False):
     rotor = Enigma.rotors[self.rotors[index]]
     i = (Enigma.char_code(char) + self.rotor_positions[index]) % len(Enigma.alphabet)
