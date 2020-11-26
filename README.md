@@ -5,6 +5,7 @@ Repository containing a number of encoding/decoding programs.
 Currently implemented are:
 
 - [Caesar Cipher](https://github.com/M3L6H/secret-codes/blob/main/caesar_cipher.rb)
+- [Enigma Machine](https://github.com/M3L6H/secret-codes/tree/main/enigma)
 - [Vigenere Cipher](https://github.com/M3L6H/secret-codes/blob/main/vigenere_cipher.rb)
 
 ## Caesar Cipher
