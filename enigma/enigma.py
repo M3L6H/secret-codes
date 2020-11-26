@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 from random import randrange
 
-class Enigma:
+class EnigmaMachine:
   rotors = {
     "a": {
       "notches": [False, True, False, True, False, False, False, False, False, False, False, False, False, False, False, True, False, False, True, True, False, True, True, True, False, False],
@@ -60,7 +60,7 @@ class Enigma:
     i = None
 
     while True:
-      i = randrange(0, len(Enigma.alphabet))
+      i = randrange(0, len(EnigmaMachine.alphabet))
       if i not in chosen: break
 
     return i
@@ -68,33 +68,33 @@ class Enigma:
   # Generates the "wiring" for a reflector
   @staticmethod
   def create_reflector():
-    wiring = [None] * len(Enigma.alphabet)
+    wiring = [None] * len(EnigmaMachine.alphabet)
     chosen = []
 
-    if len(Enigma.alphabet) % 2 == 1:
-      chosen.append(randrange(0, len(Enigma.alphabet)))
-      wiring[chosen[0]] = Enigma.alphabet[chosen[0]]
+    if len(EnigmaMachine.alphabet) % 2 == 1:
+      chosen.append(randrange(0, len(EnigmaMachine.alphabet)))
+      wiring[chosen[0]] = EnigmaMachine.alphabet[chosen[0]]
 
-    for _ in range(len(Enigma.alphabet) // 2):
-      i = Enigma.get_rand_in_alphabet(chosen)
+    for _ in range(len(EnigmaMachine.alphabet) // 2):
+      i = EnigmaMachine.get_rand_in_alphabet(chosen)
       chosen.append(i)
-      j = Enigma.get_rand_in_alphabet(chosen)
+      j = EnigmaMachine.get_rand_in_alphabet(chosen)
       chosen.append(j)
-      wiring[i] = Enigma.alphabet[j]
-      wiring[j] = Enigma.alphabet[i]
+      wiring[i] = EnigmaMachine.alphabet[j]
+      wiring[j] = EnigmaMachine.alphabet[i]
 
     return wiring
 
   # Generates the "wiring" for a rotor
   @staticmethod
   def create_rotor():
-    wiring = [None] * len(Enigma.alphabet)
+    wiring = [None] * len(EnigmaMachine.alphabet)
     chosen = []
 
-    for i in range(len(Enigma.alphabet)):
-      j = Enigma.get_rand_in_alphabet(chosen)
+    for i in range(len(EnigmaMachine.alphabet)):
+      j = EnigmaMachine.get_rand_in_alphabet(chosen)
       chosen.append(j)
-      wiring[i] = Enigma.alphabet[j]
+      wiring[i] = EnigmaMachine.alphabet[j]
 
     return wiring
       
@@ -112,7 +112,7 @@ class Enigma:
       raise FileNotFoundError(f"Could not find { self.config }")
 
     self.rotors = [config["rotors"][key] for key in list(config["rotors"])]
-    self.rotor_positions = [int(config["rotor positions"][key]) % len(Enigma.alphabet) for key in list(config["rotor positions"])]
+    self.rotor_positions = [int(config["rotor positions"][key]) % len(EnigmaMachine.alphabet) for key in list(config["rotor positions"])]
     self.plugboard = {}
 
     for c in [config["plugboard"][k] for k in list(config["plugboard"])]:
@@ -127,7 +127,7 @@ class Enigma:
 
   # Transforms the given character by running it through the rotors + plugboard
   def transform(self, char):
-    if char not in Enigma.alphabet:
+    if char not in EnigmaMachine.alphabet:
       return char
 
     char = self.plugboard[char] if char in self.plugboard else char
@@ -139,7 +139,7 @@ class Enigma:
       for i in range(2):
         char = self.pass_through_rotor(char, 3 + i)
 
-    char = Enigma.reflector[Enigma.char_code(char)]
+    char = EnigmaMachine.reflector[EnigmaMachine.char_code(char)]
 
     if self.typex:
       for i in range(2):
@@ -158,28 +158,28 @@ class Enigma:
   # Rotates the rotors
   def rotate(self):
     if self.typex:
-      if Enigma.rotors[self.rotors[0]]["notches"][self.rotor_positions[0]]:
-        if Enigma.rotors[self.rotors[1]]["notches"][self.rotor_positions[1]]:
-          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(Enigma.alphabet)
+      if EnigmaMachine.rotors[self.rotors[0]]["notches"][self.rotor_positions[0]]:
+        if EnigmaMachine.rotors[self.rotors[1]]["notches"][self.rotor_positions[1]]:
+          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(EnigmaMachine.alphabet)
         
-        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(Enigma.alphabet)
+        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(EnigmaMachine.alphabet)
       
-      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
+      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(EnigmaMachine.alphabet)
     else:
-      if self.rotor_positions[0] + 1 == len(Enigma.alphabet):
-        if self.rotor_positions[1] + 1 == len(Enigma.alphabet):
-          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(Enigma.alphabet)
+      if self.rotor_positions[0] + 1 == len(EnigmaMachine.alphabet):
+        if self.rotor_positions[1] + 1 == len(EnigmaMachine.alphabet):
+          self.rotor_positions[2] = (self.rotor_positions[2] + 1) % len(EnigmaMachine.alphabet)
         
-        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(Enigma.alphabet)
+        self.rotor_positions[1] = (self.rotor_positions[1] + 1) % len(EnigmaMachine.alphabet)
       
-      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(Enigma.alphabet)
+      self.rotor_positions[0] = (self.rotor_positions[0] + 1) % len(EnigmaMachine.alphabet)
 
   # Passes the given character through the rotor at index
   def pass_through_rotor(self, char, index, rev=False):
-    rotor = Enigma.rotors[self.rotors[index]]
-    i = (Enigma.char_code(char) + self.rotor_positions[index]) % len(Enigma.alphabet)
+    rotor = EnigmaMachine.rotors[self.rotors[index]]
+    i = (EnigmaMachine.char_code(char) + self.rotor_positions[index]) % len(EnigmaMachine.alphabet)
 
     if rev:
-      return Enigma.alphabet[rotor["wiring"].index(char) - self.rotor_positions[index]]
+      return EnigmaMachine.alphabet[rotor["wiring"].index(char) - self.rotor_positions[index]]
     else:
       return rotor["wiring"][i]
