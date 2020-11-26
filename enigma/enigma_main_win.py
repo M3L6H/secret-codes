@@ -372,13 +372,36 @@ class Ui_Enigma(object):
       spin_box.setRange(0, len(EnigmaMachine.alphabet) - 1)
 
   def makeConnections(self):
+    # Connect combo boxes
+    for i in range(len(self.combo_boxes)):
+      self.combo_boxes[i].currentTextChanged.connect(
+        lambda val, i=i : self.combo_box_current_text_changed(i, val)
+      )
+    
     # Connect spin boxes
     for i in range(len(self.spin_boxes)):
-      self.spin_boxes[i].valueChanged.connect(self.spin_box_value_changed(i))
+      self.spin_boxes[i].valueChanged.connect(
+        lambda val, i=i : self.spin_box_value_changed(i, val)
+      )
 
-  def spin_box_value_changed(self, i):
+  def combo_box_current_text_changed(self, i, val):
+    other = None
+
+    for j in range(len(self.combo_boxes)):
+      if i == j: continue
+      if self.combo_boxes[j].currentText() == val:
+        other = self.combo_boxes[j]
+
+    if other != None: other.setCurrentText(self.enigmaMachine.rotors[i])
+    self.enigmaMachine.rotors[i] = val
+
+    keys = ["first", "second", "third", "fourth", "fifth"]
+    self.enigmaMachine.write("rotors", keys[i], str(val))
+
+  def spin_box_value_changed(self, i, val):
     keys = ["first_pos", "second_pos", "third_pos", "fourth_pos", "fifth_pos"]
-    return lambda val : self.enigmaMachine.write("rotor positions", keys[i], str(val))
+    self.enigmaMachine.rotor_positions[i] = val
+    self.enigmaMachine.write("rotor positions", keys[i], str(val))
 
 
 if __name__ == "__main__":
