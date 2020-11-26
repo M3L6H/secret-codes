@@ -122,6 +122,19 @@ class EnigmaMachine:
 
     self.typex = config["typex"]["enable_typex"].lower() == "true"
 
+  # Write to the config file
+  def write(self, section, key, value):
+    config = ConfigParser()
+    config.read(self.config)
+
+    if len(config.sections()) == 0:
+      raise FileNotFoundError(f"Could not find { self.config }")
+
+    config[section][key] = value
+
+    with open(self.config, "w") as f:
+      config.write(f)
+
   # Encode the passed message
   def encode(self, msg):
     return "".join(list(map(self.transform, msg)))

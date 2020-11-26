@@ -302,7 +302,7 @@ class Ui_Enigma(object):
     QtCore.QMetaObject.connectSlotsByName(Enigma)
     self.preloadUi()
     self.configureElements()
-    # self.makeConnections()
+    self.makeConnections()
 
   def retranslateUi(self, Enigma):
     _translate = QtCore.QCoreApplication.translate
@@ -370,6 +370,15 @@ class Ui_Enigma(object):
     for spin_box in self.spin_boxes:
       spin_box.setWrapping(True)
       spin_box.setRange(0, len(EnigmaMachine.alphabet) - 1)
+
+  def makeConnections(self):
+    # Connect spin boxes
+    for i in range(len(self.spin_boxes)):
+      self.spin_boxes[i].valueChanged.connect(self.spin_box_value_changed(i))
+
+  def spin_box_value_changed(self, i):
+    keys = ["first_pos", "second_pos", "third_pos", "fourth_pos", "fifth_pos"]
+    return lambda val : self.enigmaMachine.write("rotor positions", keys[i], str(val))
 
 
 if __name__ == "__main__":
