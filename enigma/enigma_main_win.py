@@ -341,7 +341,10 @@ class Ui_Enigma(object):
     self.actionEncode_Input.setShortcut(_translate("Enigma", "Ctrl+E"))
 
   def preloadUi(self):
+    # Preload typex
     self.typex_checkBox.setChecked(self.enigmaMachine.typex)
+
+    # Preload combo boxes
     self.rotor1_comboBox.setCurrentIndex(self.rotor_options.index(
       self.enigmaMachine.rotors[0]
     ))
@@ -357,6 +360,13 @@ class Ui_Enigma(object):
     self.rotor5_comboBox.setCurrentIndex(self.rotor_options.index(
       self.enigmaMachine.rotors[4]
     ))
+
+    # Preload spin boxes
+    self.rotor1_spinBox.setValue(self.enigmaMachine.rotor_positions[0])
+    self.rotor2_spinBox.setValue(self.enigmaMachine.rotor_positions[1])
+    self.rotor3_spinBox.setValue(self.enigmaMachine.rotor_positions[2])
+    self.rotor4_spinBox.setValue(self.enigmaMachine.rotor_positions[3])
+    self.rotor5_spinBox.setValue(self.enigmaMachine.rotor_positions[4])
 
 
 if __name__ == "__main__":
