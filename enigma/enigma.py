@@ -137,6 +137,7 @@ class EnigmaMachine:
 
   # Encode the passed message
   def encode(self, msg):
+    self.load()
     return "".join(list(map(self.transform, msg)))
 
   # Transforms the given character by running it through the rotors + plugboard
