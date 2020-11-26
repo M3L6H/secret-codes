@@ -113,9 +113,10 @@ class EnigmaMachine:
 
     self.rotors = [config["rotors"][key] for key in list(config["rotors"])]
     self.rotor_positions = [int(config["rotor positions"][key]) % len(EnigmaMachine.alphabet) for key in list(config["rotor positions"])]
+    self.wires = [config["plugboard"][k] for k in list(config["plugboard"])]
     self.plugboard = {}
 
-    for c in [config["plugboard"][k] for k in list(config["plugboard"])]:
+    for c in self.wires:
       self.plugboard[c[0]] = c[1]
       self.plugboard[c[1]] = c[0]
 

@@ -368,6 +368,18 @@ class Ui_Enigma(object):
     self.rotor4_spinBox.setValue(self.enigmaMachine.rotor_positions[3])
     self.rotor5_spinBox.setValue(self.enigmaMachine.rotor_positions[4])
 
+    # Preload line edits
+    self.wire1_lineEdit.setText(self.enigmaMachine.wires[0])
+    self.wire2_lineEdit.setText(self.enigmaMachine.wires[1])
+    self.wire3_lineEdit.setText(self.enigmaMachine.wires[2])
+    self.wire4_lineEdit.setText(self.enigmaMachine.wires[3])
+    self.wire5_lineEdit.setText(self.enigmaMachine.wires[4])
+    self.wire6_lineEdit.setText(self.enigmaMachine.wires[5])
+    self.wire7_lineEdit.setText(self.enigmaMachine.wires[6])
+    self.wire8_lineEdit.setText(self.enigmaMachine.wires[7])
+    self.wire9_lineEdit.setText(self.enigmaMachine.wires[8])
+    self.wire10_lineEdit.setText(self.enigmaMachine.wires[9])
+
 
 if __name__ == "__main__":
   import sys
