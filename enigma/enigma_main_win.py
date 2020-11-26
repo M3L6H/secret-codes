@@ -384,6 +384,9 @@ class Ui_Enigma(object):
         lambda val, i=i : self.spin_box_value_changed(i, val)
       )
 
+    # Connect buttons
+    self.encode_pushButton.clicked.connect(self.encode)
+
   def combo_box_current_text_changed(self, i, val):
     other = None
 
@@ -402,6 +405,11 @@ class Ui_Enigma(object):
     keys = ["first_pos", "second_pos", "third_pos", "fourth_pos", "fifth_pos"]
     self.enigmaMachine.rotor_positions[i] = val
     self.enigmaMachine.write("rotor positions", keys[i], str(val))
+
+  def encode(self):
+    msg = self.input_plainTextEdit.toPlainText()
+    encoded = self.enigmaMachine.encode(msg)
+    self.output_plainTextEdit.setPlainText(encoded)
 
 
 if __name__ == "__main__":
