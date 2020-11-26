@@ -384,6 +384,12 @@ class Ui_Enigma(object):
         lambda val, i=i : self.spin_box_value_changed(i, val)
       )
 
+    # Connect line edits
+    for i in range(len(self.line_edits)):
+      self.line_edits[i].textChanged.connect(
+        lambda val, i=i : self.line_edit_text_changed(i, val)
+      )
+
     # Connect buttons
     self.encode_pushButton.clicked.connect(self.encode)
     self.copy_pushButton.clicked.connect(self.copy)
@@ -407,7 +413,31 @@ class Ui_Enigma(object):
     self.enigmaMachine.rotor_positions[i] = val
     self.enigmaMachine.write("rotor positions", keys[i], str(val))
 
+  def line_edit_text_changed(self, i, val):
+    wire = self.enigmaMachine.wires[i]
+    keys = ["wire0", "wire1", "wire2", "wire3", "wire4", "wire5", "wire6", "wire7", "wire8", "wire9"]
+    
+    if len(val) == 1 and len(wire) == 2:
+      del self.enigmaMachine.plugboard[wire[0]]
+      del self.enigmaMachine.plugboard[wire[1]]
+      self.enigmaMachine.wires[i] = ""
+    elif len(val) == 2:
+      if val[0] in self.enigmaMachine.plugboard or val[1] in self.enigmaMachine.plugboard:
+        self.line_edits[i].setText(val[0])
+      else:
+        if len(wire) == 2:
+          del self.enigmaMachine.plugboard[wire[0]]
+          del self.enigmaMachine.plugboard[wire[1]]
+        self.enigmaMachine.wires[i] = val
+        self.enigmaMachine.plugboard[val[0]] = val[1]
+        self.enigmaMachine.plugboard[val[1]] = val[0]
+        self.enigmaMachine.write("plugboard", keys[i], val)
+
+
+
   def encode(self):
+    self.enigmaMachine.load()
+    self.preloadUi()
     msg = self.input_plainTextEdit.toPlainText()
     encoded = self.enigmaMachine.encode(msg)
     self.output_plainTextEdit.setPlainText(encoded)
