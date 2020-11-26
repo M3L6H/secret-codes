@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
-
 from enigma import EnigmaMachine
+import pyperclip
 
 QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
 QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
@@ -386,6 +386,7 @@ class Ui_Enigma(object):
 
     # Connect buttons
     self.encode_pushButton.clicked.connect(self.encode)
+    self.copy_pushButton.clicked.connect(self.copy)
 
   def combo_box_current_text_changed(self, i, val):
     other = None
@@ -410,6 +411,9 @@ class Ui_Enigma(object):
     msg = self.input_plainTextEdit.toPlainText()
     encoded = self.enigmaMachine.encode(msg)
     self.output_plainTextEdit.setPlainText(encoded)
+
+  def copy(self):
+    pyperclip.copy(self.output_plainTextEdit.toPlainText())
 
 
 if __name__ == "__main__":
