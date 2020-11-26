@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 
-from enigma import Enigma
+from enigma import EnigmaMachine
 
 QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
 QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
@@ -11,6 +11,9 @@ class Ui_Enigma(object):
   def setupUi(self, Enigma):
     Enigma.setObjectName("Enigma")
     Enigma.resize(800, 600)
+
+    self.rotor_options = list(EnigmaMachine.rotors.keys())
+    
     self.centralwidget = QtWidgets.QWidget(Enigma)
     self.centralwidget.setObjectName("centralwidget")
     self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -52,6 +55,7 @@ class Ui_Enigma(object):
     self.rotors_gridLayout.addItem(spacerItem1, 0, 4, 1, 1)
     self.rotor2_comboBox = QtWidgets.QComboBox(self.rotor_widget)
     self.rotor2_comboBox.setObjectName("rotor2_comboBox")
+    self.rotor2_comboBox.addItems(self.rotor_options)
     self.rotors_gridLayout.addWidget(self.rotor2_comboBox, 1, 3, 1, 1)
     self.rotor2_spinBox = QtWidgets.QSpinBox(self.rotor_widget)
     self.rotor2_spinBox.setObjectName("rotor2_spinBox")
@@ -73,14 +77,17 @@ class Ui_Enigma(object):
     self.rotors_gridLayout.addItem(spacerItem4, 0, 10, 1, 1)
     self.rotor4_comboBox = QtWidgets.QComboBox(self.rotor_widget)
     self.rotor4_comboBox.setObjectName("rotor4_comboBox")
+    self.rotor4_comboBox.addItems(self.rotor_options)
     self.rotors_gridLayout.addWidget(self.rotor4_comboBox, 1, 7, 1, 1)
     self.rotor1_comboBox = QtWidgets.QComboBox(self.rotor_widget)
     self.rotor1_comboBox.setObjectName("rotor1_comboBox")
+    self.rotor1_comboBox.addItems(self.rotor_options)
     self.rotors_gridLayout.addWidget(self.rotor1_comboBox, 1, 1, 1, 1)
     spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
     self.rotors_gridLayout.addItem(spacerItem5, 0, 0, 1, 1)
     self.rotor5_comboBox = QtWidgets.QComboBox(self.rotor_widget)
     self.rotor5_comboBox.setObjectName("rotor5_comboBox")
+    self.rotor5_comboBox.addItems(self.rotor_options)
     self.rotors_gridLayout.addWidget(self.rotor5_comboBox, 1, 9, 1, 1)
     self.rotor4_label = QtWidgets.QLabel(self.rotor_widget)
     self.rotor4_label.setObjectName("rotor4_label")
@@ -98,6 +105,7 @@ class Ui_Enigma(object):
     self.rotors_gridLayout.addWidget(self.rotor4_spinBox, 2, 7, 1, 1)
     self.rotor3_comboBox = QtWidgets.QComboBox(self.rotor_widget)
     self.rotor3_comboBox.setObjectName("rotor3_comboBox")
+    self.rotor3_comboBox.addItems(self.rotor_options)
     self.rotors_gridLayout.addWidget(self.rotor3_comboBox, 1, 5, 1, 1)
     self.rotor2_label = QtWidgets.QLabel(self.rotor_widget)
     self.rotor2_label.setObjectName("rotor2_label")
@@ -284,8 +292,10 @@ class Ui_Enigma(object):
     self.menubar.addAction(self.menuEdit.menuAction())
     self.menubar.addAction(self.menuHelp.menuAction())
 
+    self.enigmaMachine = EnigmaMachine()
     self.retranslateUi(Enigma)
     QtCore.QMetaObject.connectSlotsByName(Enigma)
+    self.preloadUi()
 
   def retranslateUi(self, Enigma):
     _translate = QtCore.QCoreApplication.translate
@@ -330,6 +340,24 @@ class Ui_Enigma(object):
     self.actionEncode_Input.setText(_translate("Enigma", "Encode Input"))
     self.actionEncode_Input.setShortcut(_translate("Enigma", "Ctrl+E"))
 
+  def preloadUi(self):
+    self.typex_checkBox.setChecked(self.enigmaMachine.typex)
+    self.rotor1_comboBox.setCurrentIndex(self.rotor_options.index(
+      self.enigmaMachine.rotors[0]
+    ))
+    self.rotor2_comboBox.setCurrentIndex(self.rotor_options.index(
+      self.enigmaMachine.rotors[1]
+    ))
+    self.rotor3_comboBox.setCurrentIndex(self.rotor_options.index(
+      self.enigmaMachine.rotors[2]
+    ))
+    self.rotor4_comboBox.setCurrentIndex(self.rotor_options.index(
+      self.enigmaMachine.rotors[3]
+    ))
+    self.rotor5_comboBox.setCurrentIndex(self.rotor_options.index(
+      self.enigmaMachine.rotors[4]
+    ))
+
 
 if __name__ == "__main__":
   import sys
@@ -337,5 +365,5 @@ if __name__ == "__main__":
   Enigma = QtWidgets.QMainWindow()
   ui = Ui_Enigma()
   ui.setupUi(Enigma)
-  Enigma.show()
+  Enigma.showMaximized()
   sys.exit(app.exec_())
