@@ -292,10 +292,16 @@ class Ui_Enigma(object):
     self.menubar.addAction(self.menuEdit.menuAction())
     self.menubar.addAction(self.menuHelp.menuAction())
 
+    # Collect elements
+    self.combo_boxes =[self.rotor1_comboBox, self.rotor2_comboBox, self.rotor3_comboBox, self.rotor4_comboBox, self.rotor5_comboBox] 
+    self.spin_boxes = [self.rotor1_spinBox, self.rotor2_spinBox, self.rotor3_spinBox, self.rotor4_spinBox, self.rotor5_spinBox]
+    self.line_edits = [self.wire1_lineEdit, self.wire2_lineEdit, self.wire3_lineEdit, self.wire4_lineEdit, self.wire5_lineEdit, self.wire6_lineEdit, self.wire7_lineEdit, self.wire8_lineEdit, self.wire9_lineEdit, self.wire10_lineEdit]
+
     self.enigmaMachine = EnigmaMachine()
     self.retranslateUi(Enigma)
     QtCore.QMetaObject.connectSlotsByName(Enigma)
     self.preloadUi()
+    self.makeConnections()
 
   def retranslateUi(self, Enigma):
     _translate = QtCore.QCoreApplication.translate
@@ -345,40 +351,22 @@ class Ui_Enigma(object):
     self.typex_checkBox.setChecked(self.enigmaMachine.typex)
 
     # Preload combo boxes
-    self.rotor1_comboBox.setCurrentIndex(self.rotor_options.index(
-      self.enigmaMachine.rotors[0]
-    ))
-    self.rotor2_comboBox.setCurrentIndex(self.rotor_options.index(
-      self.enigmaMachine.rotors[1]
-    ))
-    self.rotor3_comboBox.setCurrentIndex(self.rotor_options.index(
-      self.enigmaMachine.rotors[2]
-    ))
-    self.rotor4_comboBox.setCurrentIndex(self.rotor_options.index(
-      self.enigmaMachine.rotors[3]
-    ))
-    self.rotor5_comboBox.setCurrentIndex(self.rotor_options.index(
-      self.enigmaMachine.rotors[4]
-    ))
+    for i in range(len(self.combo_boxes)):
+      self.combo_boxes[i].setCurrentIndex(self.rotor_options.index(
+        self.enigmaMachine.rotors[i]
+      ))
 
     # Preload spin boxes
-    self.rotor1_spinBox.setValue(self.enigmaMachine.rotor_positions[0])
-    self.rotor2_spinBox.setValue(self.enigmaMachine.rotor_positions[1])
-    self.rotor3_spinBox.setValue(self.enigmaMachine.rotor_positions[2])
-    self.rotor4_spinBox.setValue(self.enigmaMachine.rotor_positions[3])
-    self.rotor5_spinBox.setValue(self.enigmaMachine.rotor_positions[4])
+    for i in range(len(self.spin_boxes)):
+      self.spin_boxes[i].setValue(self.enigmaMachine.rotor_positions[i])
 
     # Preload line edits
-    self.wire1_lineEdit.setText(self.enigmaMachine.wires[0])
-    self.wire2_lineEdit.setText(self.enigmaMachine.wires[1])
-    self.wire3_lineEdit.setText(self.enigmaMachine.wires[2])
-    self.wire4_lineEdit.setText(self.enigmaMachine.wires[3])
-    self.wire5_lineEdit.setText(self.enigmaMachine.wires[4])
-    self.wire6_lineEdit.setText(self.enigmaMachine.wires[5])
-    self.wire7_lineEdit.setText(self.enigmaMachine.wires[6])
-    self.wire8_lineEdit.setText(self.enigmaMachine.wires[7])
-    self.wire9_lineEdit.setText(self.enigmaMachine.wires[8])
-    self.wire10_lineEdit.setText(self.enigmaMachine.wires[9])
+    for i in range(len(self.line_edits)):
+      self.line_edits[i].setText(self.enigmaMachine.wires[i])
+
+  def makeConnections(self):
+    # Connect spin boxes
+    self.rotor1_spinBox
 
 
 if __name__ == "__main__":
