@@ -365,6 +365,12 @@ class Ui_Enigma(object):
     for i in range(len(self.line_edits)):
       self.line_edits[i].setText(self.enigmaMachine.wires[i])
 
+    # Enable/disable rotors
+    self.rotor4_comboBox.setEnabled(self.enigmaMachine.typex)
+    self.rotor4_spinBox.setEnabled(self.enigmaMachine.typex)
+    self.rotor5_comboBox.setEnabled(self.enigmaMachine.typex)
+    self.rotor5_spinBox.setEnabled(self.enigmaMachine.typex)
+
   def configureElements(self):
     # Configure spin boxes
     for spin_box in self.spin_boxes:
@@ -372,6 +378,9 @@ class Ui_Enigma(object):
       spin_box.setRange(0, len(EnigmaMachine.alphabet) - 1)
 
   def makeConnections(self):
+    # Connect check box
+    self.typex_checkBox.stateChanged.connect(self.check_box_state_changed)
+    
     # Connect combo boxes
     for i in range(len(self.combo_boxes)):
       self.combo_boxes[i].currentTextChanged.connect(
@@ -393,6 +402,15 @@ class Ui_Enigma(object):
     # Connect buttons
     self.encode_pushButton.clicked.connect(self.encode)
     self.copy_pushButton.clicked.connect(self.copy)
+
+  def check_box_state_changed(self, val):
+    self.enigmaMachine.typex = val
+    self.enigmaMachine.write("typex", "enable_typex", str(val))
+
+    self.rotor4_comboBox.setEnabled(val)
+    self.rotor4_spinBox.setEnabled(val)
+    self.rotor5_comboBox.setEnabled(val)
+    self.rotor5_spinBox.setEnabled(val)
 
   def combo_box_current_text_changed(self, i, val):
     other = None
