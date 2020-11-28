@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from enigma import EnigmaMachine
-import pyperclip
+import pyperclip, os
 
 QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
 QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
@@ -12,7 +12,12 @@ class Ui_Enigma(object):
     Enigma.setObjectName("Enigma")
     Enigma.resize(800, 600)
 
+    self.Enigma = Enigma
+
     self.rotor_options = list(EnigmaMachine.rotors.keys())
+    self.settings = QtCore.QSettings("Michael Hollingworth", "Enigma")
+
+    print(self.settings.value("config_path"))
     
     self.centralwidget = QtWidgets.QWidget(Enigma)
     self.centralwidget.setObjectName("centralwidget")
@@ -297,7 +302,56 @@ class Ui_Enigma(object):
     self.spin_boxes = [self.rotor1_spinBox, self.rotor2_spinBox, self.rotor3_spinBox, self.rotor4_spinBox, self.rotor5_spinBox]
     self.line_edits = [self.wire1_lineEdit, self.wire2_lineEdit, self.wire3_lineEdit, self.wire4_lineEdit, self.wire5_lineEdit, self.wire6_lineEdit, self.wire7_lineEdit, self.wire8_lineEdit, self.wire9_lineEdit, self.wire10_lineEdit]
 
-    self.enigmaMachine = EnigmaMachine()
+    attempts = 0
+
+    while True:
+      attempts += 1
+
+      try:
+        self.enigmaMachine = EnigmaMachine(self.settings.value("config_path"))
+        break
+      except FileNotFoundError:
+        if attempts > 5: break
+
+        documents = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.DocumentsLocation)
+        config_path = f"{documents}/Enigma/enigma.ini"
+
+        if not os.path.exists(f"{documents}/Enigma"):
+          os.makedirs(f"{documents}/Enigma")
+        
+        with open(config_path, "w") as f:
+          f.write("""
+          [rotors]
+          first = a
+          second = b
+          third = c
+          fourth = d
+          fifth = e
+
+          [rotor positions]
+          first_pos = 0
+          second_pos = 0
+          third_pos = 0
+          fourth_pos = 0
+          fifth_pos = 0
+
+          [plugboard]
+          wire0 = ak
+          wire1 = bl
+          wire2 = cm
+          wire3 = dn
+          wire4 = eo
+          wire5 = fp
+          wire6 = gq
+          wire7 = hr
+          wire8 = is
+          wire9 = jt
+
+          [typex]
+          enable_typex = 0
+          """[1:-1])
+        self.settings.setValue("config_path", config_path)
+
     self.retranslateUi(Enigma)
     QtCore.QMetaObject.connectSlotsByName(Enigma)
     self.preloadUi()
@@ -403,6 +457,9 @@ class Ui_Enigma(object):
     self.encode_pushButton.clicked.connect(self.encode)
     self.copy_pushButton.clicked.connect(self.copy)
 
+    # Connect actions
+    self.actionOpen_Config.triggered.connect(self.open_config)
+
   def check_box_state_changed(self, val):
     self.enigmaMachine.typex = val
     self.enigmaMachine.write("typex", "enable_typex", str(val))
@@ -451,6 +508,13 @@ class Ui_Enigma(object):
         self.enigmaMachine.plugboard[val[1]] = val[0]
         self.enigmaMachine.write("plugboard", keys[i], val)
 
+  def open_config(self):
+    config, _ = QtWidgets.QFileDialog.getOpenFileName(self.Enigma, "Open Config", self.settings.value("config_path"), "Config files (*.ini)")
+    print(config)
+    self.enigmaMachine.config = config
+    self.settings.setValue("config_path", config)
+    self.enigmaMachine.load()
+    self.preloadUi()
 
 
   def encode(self):
