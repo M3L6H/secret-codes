@@ -8,6 +8,15 @@ QtCore.QCoreApplication.setApplicationName("Enigma")
 
 
 class Ui_Enigma(object):
+  def about():
+    about = QtWidgets.QMessageBox()
+    about.setIcon(QtWidgets.QMessageBox.Information)
+    about.setWindowTitle("About Enigma")
+    about.setText("Enigma is an encoding app based on the famous German machine by the same name.")
+    about.setInformativeText("It also contains the ability to enable 'typex' mode, which is based of the later British model.")
+    about.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    about.exec()
+
   def setupUi(self, Enigma):
     Enigma.setObjectName("Enigma")
     Enigma.resize(800, 600)
@@ -463,6 +472,7 @@ class Ui_Enigma(object):
     self.actionCopy_Output.triggered.connect(self.copy)
     self.actionPaste_Message.triggered.connect(self.paste)
     self.actionExit.triggered.connect(sys.exit)
+    self.actionAbout_Enigma.triggered.connect(Ui_Enigma.about)
 
   def check_box_state_changed(self, val):
     self.enigmaMachine.typex = val
