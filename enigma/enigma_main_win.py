@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from enigma import EnigmaMachine
-import pyperclip, os
+import pyperclip, os, sys
 
 QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
 QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
@@ -458,7 +458,11 @@ class Ui_Enigma(object):
     self.copy_pushButton.clicked.connect(self.copy)
 
     # Connect actions
+    self.actionEncode_Input.triggered.connect(self.encode)
     self.actionOpen_Config.triggered.connect(self.open_config)
+    self.actionCopy_Output.triggered.connect(self.copy)
+    self.actionPaste_Message.triggered.connect(self.paste)
+    self.actionExit.triggered.connect(sys.exit)
 
   def check_box_state_changed(self, val):
     self.enigmaMachine.typex = val
@@ -526,6 +530,9 @@ class Ui_Enigma(object):
 
   def copy(self):
     pyperclip.copy(self.output_plainTextEdit.toPlainText())
+
+  def paste(self):
+    self.input_plainTextEdit.setPlainText(pyperclip.paste())
 
 
 if __name__ == "__main__":
