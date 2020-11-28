@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
 from enigma import EnigmaMachine
-import pyperclip, os, sys
+import pyperclip, os, sys, webbrowser
 
 QtCore.QCoreApplication.setOrganizationName("Michael Hollingworth")
 QtCore.QCoreApplication.setOrganizationDomain("michaelhollingworth.io")
@@ -473,6 +473,7 @@ class Ui_Enigma(object):
     self.actionPaste_Message.triggered.connect(self.paste)
     self.actionExit.triggered.connect(sys.exit)
     self.actionAbout_Enigma.triggered.connect(Ui_Enigma.about)
+    self.actionEnigma_Help.triggered.connect(lambda : webbrowser.open("https://github.com/M3L6H/secret-codes/tree/main/enigma"))
 
   def check_box_state_changed(self, val):
     self.enigmaMachine.typex = val
