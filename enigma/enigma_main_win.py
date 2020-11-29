@@ -507,13 +507,18 @@ class Ui_Enigma(object):
     wire = self.enigmaMachine.wires[i]
     keys = ["wire0", "wire1", "wire2", "wire3", "wire4", "wire5", "wire6", "wire7", "wire8", "wire9"]
     
+    # We just deleted a character and haven't updated the wires yet
     if len(val) == 1 and len(wire) == 2:
+      # So remove the corresponding connection
       del self.enigmaMachine.plugboard[wire[0]]
       del self.enigmaMachine.plugboard[wire[1]]
       self.enigmaMachine.wires[i] = ""
+    # We just added a new wire
     elif len(val) == 2:
+      # This wire already exists, so we revert our change
       if val[0] in self.enigmaMachine.plugboard or val[1] in self.enigmaMachine.plugboard:
         self.line_edits[i].setText(val[0])
+      # Otherwise we create the new connection and save it to our config
       else:
         if len(wire) == 2:
           del self.enigmaMachine.plugboard[wire[0]]
@@ -530,7 +535,6 @@ class Ui_Enigma(object):
     self.settings.setValue("config_path", config)
     self.enigmaMachine.load()
     self.preloadUi()
-
 
   def encode(self):
     self.enigmaMachine.load()
