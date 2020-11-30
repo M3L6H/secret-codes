@@ -410,6 +410,7 @@ class Ui_Enigma(object):
     self.actionEncode_Input.setText(_translate("Enigma", "Encode Input"))
     self.actionEncode_Input.setShortcut(_translate("Enigma", "Ctrl+E"))
 
+  # Load the UI with values from the config
   def preloadUi(self):
     # Preload typex
     self.typex_checkBox.setChecked(self.enigmaMachine.typex)
@@ -434,12 +435,14 @@ class Ui_Enigma(object):
     self.rotor5_comboBox.setEnabled(self.enigmaMachine.typex)
     self.rotor5_spinBox.setEnabled(self.enigmaMachine.typex)
 
+  # Configure the spin boxes
   def configureElements(self):
     # Configure spin boxes
     for spin_box in self.spin_boxes:
       spin_box.setWrapping(True)
       spin_box.setRange(0, len(EnigmaMachine.alphabet) - 1)
 
+  # Connect all the elements to their handler methods
   def makeConnections(self):
     # Connect check box
     self.typex_checkBox.stateChanged.connect(self.check_box_state_changed)
@@ -475,6 +478,7 @@ class Ui_Enigma(object):
     self.actionAbout_Enigma.triggered.connect(Ui_Enigma.about)
     self.actionEnigma_Help.triggered.connect(lambda : webbrowser.open("https://github.com/M3L6H/secret-codes/tree/main/enigma"))
 
+  # Enable/disable typex rotors
   def check_box_state_changed(self, val):
     self.enigmaMachine.typex = val
     self.enigmaMachine.write("typex", "enable_typex", str(val))
@@ -484,6 +488,7 @@ class Ui_Enigma(object):
     self.rotor5_comboBox.setEnabled(val)
     self.rotor5_spinBox.setEnabled(val)
 
+  # Update the currently picked rotors when the combo box is changed
   def combo_box_current_text_changed(self, i, val):
     other = None
 
@@ -498,11 +503,13 @@ class Ui_Enigma(object):
     keys = ["first", "second", "third", "fourth", "fifth"]
     self.enigmaMachine.write("rotors", keys[i], str(val))
 
+  # Update the positions of the rotors based on the spin boxes
   def spin_box_value_changed(self, i, val):
     keys = ["first_pos", "second_pos", "third_pos", "fourth_pos", "fifth_pos"]
     self.enigmaMachine.rotor_positions[i] = val
     self.enigmaMachine.write("rotor positions", keys[i], str(val))
 
+  # Update the wire connections when they change
   def line_edit_text_changed(self, i, val):
     wire = self.enigmaMachine.wires[i]
     keys = ["wire0", "wire1", "wire2", "wire3", "wire4", "wire5", "wire6", "wire7", "wire8", "wire9"]
@@ -528,6 +535,7 @@ class Ui_Enigma(object):
         self.enigmaMachine.plugboard[val[1]] = val[0]
         self.enigmaMachine.write("plugboard", keys[i], val)
 
+  # Select a config file
   def open_config(self):
     config, _ = QtWidgets.QFileDialog.getOpenFileName(self.Enigma, "Open Config", self.settings.value("config_path"), "Config files (*.ini)")
     print(config)
@@ -536,6 +544,7 @@ class Ui_Enigma(object):
     self.enigmaMachine.load()
     self.preloadUi()
 
+  # Run a message through the machine
   def encode(self):
     self.enigmaMachine.load()
     self.preloadUi()
@@ -543,9 +552,11 @@ class Ui_Enigma(object):
     encoded = self.enigmaMachine.encode(msg)
     self.output_plainTextEdit.setPlainText(encoded)
 
+  # Copy text from the output box
   def copy(self):
     pyperclip.copy(self.output_plainTextEdit.toPlainText())
 
+  # Paste text into the input box
   def paste(self):
     self.input_plainTextEdit.setPlainText(pyperclip.paste())
 
